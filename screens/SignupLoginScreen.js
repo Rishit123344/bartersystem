@@ -65,9 +65,9 @@ userlogin=(emailID,password)=>{
   
   firebase.auth().signInWithEmailAndPassword(emailID,password)
   .then(()=>{
-      return Alert.alert("Login Sucessful")
+    
   })
-  .catch((error)=>{
+  .catch((error)=>{this.props.navigation.navigate('HomeScreen')
 var errorcode = error.code
 var errorMessage = error.errorMessage
 return Alert.alert(errorMessage)
