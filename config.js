@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
 require ('@firebase/firestore')
- // Your web app's Firebase configuration
- var firebaseConfig = {
+// Your web app's Firebase configuration
+var firebaseConfig = {
   apiKey: "AIzaSyCcNVAgXr97XAfAZs1-HHkx0JScNdPLdMk",
   authDomain: "barter-system-2895d.firebaseapp.com",
   databaseURL: "https://barter-system-2895d.firebaseio.com",

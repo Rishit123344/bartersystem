@@ -65,9 +65,9 @@ userlogin=(emailID,password)=>{
   
   firebase.auth().signInWithEmailAndPassword(emailID,password)
   .then(()=>{
-    
+      this.props.navigation.navigate('HomeScreen')
   })
-  .catch((error)=>{this.props.navigation.navigate('HomeScreen')
+  .catch((error)=>{
 var errorcode = error.code
 var errorMessage = error.errorMessage
 return Alert.alert(errorMessage)
@@ -81,6 +81,7 @@ if(password!==confirmPassword){
 }else{
   firebase.auth().createUserWithEmailAndPassword(emailID,password)
   .then(()=>{
+    console.log("before adding user")
     db.collection('users').add({
       first_name:this.state.firstName,
       last_name:this.state.lastName,
@@ -88,6 +89,7 @@ if(password!==confirmPassword){
       address:this.state.address,
       email_Id:this.state.emailID
     })
+    console.log("after adding user")
       return Alert.alert("User Added Sucessfully","",[{text:"ok",onPress:()=>{this.setState({
        'isModalVisible':false
       })}}])
@@ -105,7 +107,7 @@ render(){
         <View style={styles.container }>
           {this.showModal()}
             <View style={styles.profileContainer}>
-<Text style={styles.title}>Barter System</Text>
+<Text style={styles.title}>BOOK SANTA</Text>
             </View>
             <View style={styles.buttonContainer}>
             <TextInput style={styles.loginBox}placeholder="abc@example.com"placeholderTextColor='#ffff' keyboardType='email-address'onChangeText={(text)=>{this.setState({

@@ -4,20 +4,20 @@ import { StyleSheet, Text, View } from 'react-native';
 import SignupLoginScreen from './screens/SignupLoginScreen'
 import HomeScreen from './screens/HomeScreen'
 import ExchangeScreen from './screens/ExchangeScreen'
+import SettingScreen from './screens/SettingScreen'
 import {createAppContainer,createSwitchNavigator} from 'react-navigation'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
+import {AppDrawNavigator} from './components/AppDrawNavigatior'
+import {AppTabNavigator} from './components/AppTabNavigator'
+
 export default function App() {
   return (
    <AppContainer/>
   );
 }
-const TabNavigator = createBottomTabNavigator({
-  HomeScreen:{screen:HomeScreen},
-  ExchangeScreen:{screen:ExchangeScreen}
-})
 const SwitchNavigator = createSwitchNavigator({
   LoginScreen:{screen:SignupLoginScreen},
-  TabNavigator:{screen:TabNavigator}
+  Drawer:{screen:AppDrawNavigator}
 })
 const AppContainer = createAppContainer(SwitchNavigator)
 const styles = StyleSheet.create({
