@@ -22,13 +22,13 @@ export default class HomeScreen extends React.Component{
           reasonToRequest:''
         })
         return(
-            Alert.alert("Book Requested Successfully")
+            Alert.alert("Item Requested Successfully")
         )
     }
     render(){
         return(
             <KeyboardAvoidingView style={styles.KeyboardStyles}>
-                <Text style={{fontSize:100}}>Exchange Screen</Text>
+                <Text style={{fontSize:100,marginBottom:100}}>Home Screen</Text>
             <View style={{flex:1}}>
                     <TextInput style={styles.formtextinput} placeholder={"Enter item Name"}onChangeText={(text)=>{this.setState({
                         itemName:text

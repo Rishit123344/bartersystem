@@ -1,13 +1,11 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack'
-import ExchangeScreen from '../screens/BookDonateScreen'
+import ExchangeScreen from '../screens/ExchangeScreen'
 import ReceiverDetailsScreen from '../screens/ReceiverDetailsScreen'
 
-export default class AppStackNavigator extends React.Component{
-    constructor(props){
-        super(props)
-        this.state(
-            itemsDonateList={screen:ExchangeScreen}
-        )
-    }
-}
+export const AppStackNavigator =  createStackNavigator({
+    ExchangeScreen:{screen:ExchangeScreen,navigationOptions:{headerShown:false}},
+    ReceiverDetails:{screen:ReceiverDetailsScreen,navigationOptions:{headerShown:false}}
+},
+{initialRouteName:'ExchnageScreen'}
+)
