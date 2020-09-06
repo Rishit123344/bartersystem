@@ -8,7 +8,7 @@ import MyBarterScreen from '../screens/MyBarterScreen'
 export const AppDrawNavigator = createDrawerNavigator({
     Home:{screen:AppTabNavigator},
     Setting:{screen:SettingScreen},
-    MyBarters:{screen:MyBarterScreen},
+    MyBarter:{screen:MyBarterScreen}
 },
 {
     contentComponent:CustomSideBarMenu

@@ -1,107 +1,104 @@
-import React from 'react'
-import {Text,View,TextInput,TouchableOpacity,FlatList,StyleSheet} from 'react-native'
+import React, { Component } from 'react';
+import { View, StyleSheet, Text, FlatList,TouchableOpacity } from 'react-native';
+import { ListItem } from 'react-native-elements'
+import firebase from 'firebase';
 import db from '../config'
-import firebase from 'firebase'
+import MyHeader from '../components/MyHeader';
 
-export default class ExchangeScreen extends React.Component{
-    constructor(props){
-        super(props);
-this.state = {
-    allitems:[],
-    search:'',
-    lastVisibleItems:null
-}
+export default class BookDonateScreen extends Component{
+  constructor(){
+    super()
+    this.state = {
+      userId  : firebase.auth().currentUser.email,
+      requestedItemsList : []
     }
-    searchItems=async(text)=>{
- var enteredText = text.split("")
-var text = text.toUpperCase()
-if(enteredText[0].toUpperCase()==='B'){
-    const Items = await db.collection("User").where("itemName",'==',text).get()
-    Items.docs.map((doc)=>{
-        this.setState({
-            allitems:[...this.state.allitems,doc.data()],
-            lastVisibleItems:doc
-        })
+  this.requestRef= null
+  }
+
+  getRequestedItemssList =()=>{
+    this.requestRef = db.collection("requested_items")
+    .onSnapshot((snapshot)=>{
+      var requestedItemsList = snapshot.docs.map((doc) => doc.data())
+      this.setState({
+        requestedItemsList : requestedItemsList
+      });
     })
-}
+  }
 
-    }
-    fetchMoreItems=async()=>{
-        var text = this.state.search.toUpperCase()
-        var enteredText = text.split("")
-        if(enteredText[0].toUpperCase()==='B'){
-            const User = await db.collection("User").where("itemName",'==',text).startAfter(this.state.lastVisibleItems).limit(10).get()
-            User.docs.map((doc)=>{
-                this.setState({
-                    allitems:[...this.state.allitems,doc.data()],
-                    lastVisibleItems:doc
-                })
-            })
-        }
-            }
-    componentDidMount=async()=>{
-          const query = await db.collection("User").limit(10).get(
-              query.docs.map((doc)=>{
-                  this.setState({
-                     allitems:[],
-                     lastVisibleItems:doc
-                  })
-              })
-          )
-      }
-   
-      render(){
-        return(
-          
-        <View style={styles.container}>
-        <View style={styles.searchbar}>
-            <TextInput style={styles.bar}placeholder="Enter Item Name"onChangeText={(text)=>{this.setState({
-                search:text
-                        })}}></TextInput>
-            <TouchableOpacity style={styles.searchbutton}onPress={()=>{
-                this.searchItems(this.state.search)
-            }}>
-                <Text>Search</Text>
+  componentDidMount(){
+    this.getRequestedItemsList()
+  }
+
+  componentWillUnmount(){
+    this.requestRef();
+  }
+
+  keyExtractor = (item, index) => index.toString()
+
+  renderItem = ( {item, i} ) =>{
+    return (
+      <ListItem
+        key={i}
+        title={item.item_name}
+        subtitle={item.reason_to_request}
+        titleStyle={{ color: 'black', fontWeight: 'bold' }}
+        rightElement={
+            <TouchableOpacity style={styles.button}
+              onPress ={()=>{
+                this.props.navigation.navigate("RecieverDetails",{"details": item})
+              }}
+              >
+              <Text style={{color:'#ffff'}}>View</Text>
             </TouchableOpacity>
-            </View>
-<FlatList data={this.state.allitems}
-renderItem={({item})=>(
-<View style={{borderBottomWidth:2}}>
-<Text>{'item Name:'+item.itemName}</Text>
-<Text>{'Description:'+item.Description}</Text>
-</View>
-)} keyExtractor={(item,index)=>index.toString()} onEndReached={this.fetchMoreItems} onEndReachedThreshold={0.7}> 
-</FlatList>
-</View>
-);
-    }
-}
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        marginTop:20
-    },
-    searchbar:{
-flexDirection:'row',
-height:40,
-width:'auto',
-borderWidth:0.5,
-alignItems:'center',
-backgroundColor:'white',
-    },
-    bar:{
-borderWidth:2,
-height:30,
-width:300,
-paddingLeft:10
-    },
-    searchbutton:{
-        borderWidth:1,
-        height:30,
-        width:50,
-        alignItems:'center',
-        justifyContent:'center',
-        backgroundColor:'green'
-    }
-})
+          }
+        bottomDivider
+      />
+    )
+  }
 
+  render(){
+    return(
+      <View style={{flex:1}}>
+        <MyHeader title="Donate Items" navigation ={this.props.navigation}/>
+        <View style={{flex:1}}>
+          {
+            this.state.requestedItemsList.length === 0
+            ?(
+              <View style={styles.subContainer}>
+                <Text style={{ fontSize: 20}}>List Of All Requested Items</Text>
+              </View>
+            )
+            :(
+              <FlatList
+                keyExtractor={this.keyExtractor}
+                data={this.state.requestedItemsList}
+                renderItem={this.renderItem}
+              />
+            )
+          }
+        </View>
+      </View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  subContainer:{
+    flex:1,
+    fontSize: 20,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  button:{
+    width:100,
+    height:30,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:"#ff5722",
+    shadowColor: "#000",
+    shadowOffset: {
+       width: 0,
+       height: 8
+     }
+  }
+})

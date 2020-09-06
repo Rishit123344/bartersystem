@@ -7,9 +7,100 @@ export default class HomeScreen extends React.Component{
     constructor(){
         super()
         this.state = {
+            userId : firebase.auth().currentUser.email,
             itemName:'',
-            reasonToRequest:''
+            reasonToRequest:'',
+            isItemRequestActive:'',
+      requestedItemName:"",
+      itemStatus:'',
+      requestId:'',
+      userDocId:'',
+      docId:'',
              }
+    }
+
+    createUniqueId(){
+        return Math.random().toString(36).substring(7);
+      }
+    
+    
+    
+      addRequest =(itemName,reasonToRequest)=>{
+        var userId = this.state.userId
+        var randomRequestId = this.createUniqueId()
+        db.collection('requested_books').add({
+            "user_id": userId,
+            "item_name":itemName,
+            "reason_to_request":reasonToRequest,
+            "request_id"  : randomRequestId,
+            "book_status":'requested',
+            "Date":firebase.firestore.FieldValue.serverTimestamp()
+        })
+        this.getItemRequest()
+        db.collection('users').where('email_id','==',userId).get()
+        .then((snapShot)=>{
+          snapShot.forEach((doc)=>{
+    db.collection('users').doc(doc.id).update({
+      isItemRequestActive:true
+    })
+          })
+        })
+    
+        this.setState({
+            itemName :'',
+            reasonToRequest : '',
+            requestId:randomRequestId
+        })
+    
+        return Alert.alert("Item Requested Successfully")
+      }
+    getItemRequest=()=>{
+      var itemrequest=db.collection('requested_items').where('user_id','==',this.state.userId).get.then((snapShot)=>{
+        snapShot.forEach((doc)=>{
+          if(doc.data().book_Status!=='received'){
+            this.setState({
+              requestId:doc.data().request_id,
+              requestedItemName:doc.data().book_name,
+              itemStatus:doc.data().item_status,
+    docId:doc.id
+            })
+          }
+        })
+      })
+    }
+    getItemRequestActive(){
+      db.collection('users').where('email_id','==',this.state.userId).onSnapshot((quary)=>{
+        quary.forEach((doc)=>{
+          this.setState({
+            isItemRequestActive:doc.data().isItemRequestActive,
+            userDocId:doc.id
+          })
+        })
+      })
+    }
+    componentDidMount(){
+      this.getItemRequest();
+      this.getItemRequestActive()
+    }
+    receivedItems = (itemName)=>{
+      var userId = this.state.userId
+      var requestId = this.state.requestId
+      db.collection('received_items').add({
+        'user_id':userId,
+        'item_name':itemName,
+        'request_id':requestId,
+        'itemstatus':received
+      })
+    }
+    updateItemRequestStatus = ()=>{
+      db.collection('requested_items').doc(this.state.docId).update({item_Status:'received'})
+      db.collection('users').where('email_id','==',this.state.userId).get().then((snapShot)=>{
+        snapShot.forEach((doc)=>{
+          db.collection('users').doc(doc.id).update({
+            isItemRequestActive:false
+          })
+        })
+      })
     }
     submitForm=async()=>{
         db.collection("User").add({

@@ -2,13 +2,13 @@ import * as firebase from 'firebase'
 require ('@firebase/firestore')
 // Your web app's Firebase configuration
 var firebaseConfig = {
-  apiKey: "AIzaSyCPWCURRBoYc_ILrwG6wdT4RWC0r3Tv1ho",
-  authDomain: "barter-syste.firebaseapp.com",
-  databaseURL: "https://barter-syste.firebaseio.com",
-  projectId: "barter-syste",
-  storageBucket: "barter-syste.appspot.com",
-  messagingSenderId: "426258893322",
-  appId: "1:426258893322:web:707921e024f30a0f8c6df3"
+  apiKey: "AIzaSyCkNCfK-B3VR6eOzJnvmNmQLGyje5Prfpc",
+  authDomain: "barter-6da44.firebaseapp.com",
+  databaseURL: "https://barter-6da44.firebaseio.com",
+  projectId: "barter-6da44",
+  storageBucket: "barter-6da44.appspot.com",
+  messagingSenderId: "579512968596",
+  appId: "1:579512968596:web:09c6104f3ca61a7ac8db81"
 };
 // Initialize Firebase
 if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }

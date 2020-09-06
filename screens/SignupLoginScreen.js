@@ -107,7 +107,7 @@ render(){
         <View style={styles.container }>
           {this.showModal()}
             <View style={styles.profileContainer}>
-<Text style={styles.title}>BOOK SANTA</Text>
+<Text style={styles.title}>BARTER SYSTEM</Text>
             </View>
             <View style={styles.buttonContainer}>
             <TextInput style={styles.loginBox}placeholder="abc@example.com"placeholderTextColor='#ffff' keyboardType='email-address'onChangeText={(text)=>{this.setState({
