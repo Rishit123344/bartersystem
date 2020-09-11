@@ -3,6 +3,7 @@ import {Text,View,StyleSheet,TouchableOpacity, Button} from 'react-native'
 import {Card,Header,Icon} from 'react-native-elements'
 import firebase from 'firebase'
 import db from '../config'
+import MyHeader from '../components/MyHeader.js'
 
 export default class ReceiverDetailsScreen extends React.Component{
     constructor(props){
@@ -80,7 +81,7 @@ export default class ReceiverDetailsScreen extends React.Component{
     <View style={styles.buttonContainer}>
         {
             this.state.receiverId!==this.state.userId ?(
-                <TouchableOpacity style={styles.button}onPress={()=>{this.updateBookStatus()
+                <TouchableOpacity style={styles.button}onPress={()=>{this.updateItemStatus()
                     this.props.navigation.navigate('MyBarter')}}>
                         <Text>I Want To Donate</Text>
                     </TouchableOpacity>

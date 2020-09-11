@@ -2,6 +2,7 @@ import React from 'react'
 import {Text,View,TouchableOpacity,StyleSheet,TextInput,Image,KeyboardAvoidingView, Alert,ScrollView,Modal} from 'react-native'
 import firebase from 'firebase'
 import db from '../config'
+import MyHeader from '../components/MyHeader'
 
 export default class SettingScreen extends React.Component{
 constructor(){
@@ -45,7 +46,7 @@ componentDidMount(){
 render(){
     return(
         <View style={styles.container}>
-            <Text title='Settings'navigation={this.props.navigation}></Text>
+            <MyHeader title="Settings" navigation={this.props.navigation}/>
             <View style={styles.formContainer}>
             <TextInput style={styles.formtextinput}placeholder="first name"value={this.state.firstName}maxLength={8} onChangeText={(text)=>{this.setState({
                     firstName:text

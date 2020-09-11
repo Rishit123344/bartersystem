@@ -2,6 +2,7 @@ import React from 'react'
 import {Text,View,TouchableOpacity,StyleSheet,TextInput,Image,KeyboardAvoidingView, Alert,ScrollView,Modal} from 'react-native'
 import firebase from 'firebase'
 import db from '../config'
+import MyHeader from '../components/MyHeader'
 
 export default class HomeScreen extends React.Component{
     constructor(){
@@ -28,15 +29,15 @@ export default class HomeScreen extends React.Component{
       addRequest =(itemName,reasonToRequest)=>{
         var userId = this.state.userId
         var randomRequestId = this.createUniqueId()
-        db.collection('requested_books').add({
+        db.collection('requested_items').add({
             "user_id": userId,
             "item_name":itemName,
             "reason_to_request":reasonToRequest,
             "request_id"  : randomRequestId,
-            "book_status":'requested',
+            "item_status":'requested',
             "Date":firebase.firestore.FieldValue.serverTimestamp()
         })
-        this.getItemRequest()
+    this.getItemRequest()
         db.collection('users').where('email_id','==',userId).get()
         .then((snapShot)=>{
           snapShot.forEach((doc)=>{
@@ -54,20 +55,24 @@ export default class HomeScreen extends React.Component{
     
         return Alert.alert("Item Requested Successfully")
       }
-    getItemRequest=()=>{
-      var itemrequest=db.collection('requested_items').where('user_id','==',this.state.userId).get.then((snapShot)=>{
-        snapShot.forEach((doc)=>{
-          if(doc.data().book_Status!=='received'){
-            this.setState({
-              requestId:doc.data().request_id,
-              requestedItemName:doc.data().book_name,
-              itemStatus:doc.data().item_status,
-    docId:doc.id
-            })
-          }
-        })
-      })
-    }
+      getItemRequest =()=>{
+        // getting the requested book
+      var bookRequest=  db.collection('requested_items')
+        .where('user_id','==',this.state.userId)
+        .get()
+        .then((snapshot)=>{
+          snapshot.forEach((doc)=>{
+            if(doc.data().item_status !== "received"){
+              this.setState({
+                requestId : doc.data().request_id,
+                requestedItemName: doc.data().item_name,
+                itemStatus:doc.data().item_status,
+                docId     : doc.id
+              })
+            }
+          })
+      })}
+      
     getItemRequestActive(){
       db.collection('users').where('email_id','==',this.state.userId).onSnapshot((quary)=>{
         quary.forEach((doc)=>{
@@ -119,7 +124,8 @@ export default class HomeScreen extends React.Component{
     render(){
         return(
             <KeyboardAvoidingView style={styles.KeyboardStyles}>
-                <Text style={{fontSize:100,marginBottom:100}}>Home Screen</Text>
+               <MyHeader title="Request Items" navigation ={this.props.navigation}/>
+
             <View style={{flex:1}}>
                     <TextInput style={styles.formtextinput} placeholder={"Enter item Name"}onChangeText={(text)=>{this.setState({
                         itemName:text
